@@ -8,8 +8,10 @@ int main()
     RedBlackTree x = RedBlackTree();
 
     std::string meme = "text";
-    x.insertKey(0, "ich bin root");
-    x.insertKey(1, "bin rechts von root");
+    Result res = x.insertKey(0, "ich bin root");
+    std::cout << res.index << std::endl;
+    Result res2 = x.insertKey(1, "bin rechts von root");
+    std::cout << res2.index << std::endl;
     x.insertKey(-1, "bin links von root");
 
 
