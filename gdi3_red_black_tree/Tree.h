@@ -20,21 +20,26 @@ typedef struct Node
 typedef struct Result
 {
     Node* Node;
-    int index; // Index des gefundenen Elements
-    bool success;
-    int comparisons;
+    int index; // Index des gefundenen Elements 
+    // = KEY?
+    // WTF?
+    bool success = false;
+    int comparisons = 0;
 } Result;
 
 class RedBlackTree
 {
 private:
-    Node* root;
+    Node* root = nullptr;
 
 public:
     RedBlackTree() {
     };
 
-    void insertKey(int key, std::string value) {
+    Result insertKey(int key, std::string value) {
+        Result res = Result();
+        res.comparisons = 0;
+
         Node* z = new Node();
         z->key = key;
         z->value = value;
@@ -44,7 +49,7 @@ public:
         if (root == NULL)
         {
             z->isRed = 0;
-            (root) = z;
+            root = z;
         }
         else
         {
@@ -59,6 +64,7 @@ public:
                     x = x->left;
                 else
                     x = x->right;
+                res.comparisons++;
             }
             z->parent = y;
             if (z->key > y->key)
@@ -66,12 +72,15 @@ public:
             else
                 y->left = z;
             z->isRed = 1;
+            res.comparisons++;
 
             // call fixInsert to fix RB tree property if it is voilated in newest insertion.
             fixInsert(z);
         }
 
-        // todo: return result
+        res.success = true; // useless for insert
+        res.index = z->key;
+        return res;
     };
     Result searchKey(int key) {
         // todo
