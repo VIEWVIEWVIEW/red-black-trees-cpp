@@ -31,20 +31,16 @@ private:
     Node* root;
 
 public:
-    RedBlackTree(int key, std::string value) {
-        root = new Node();
-        root->key = key;
-        root->value = value;
+    RedBlackTree() {
     };
 
     void insertKey(int key, std::string value) {
-        // Allocate memory for new node
         Node* z = new Node();
         z->key = key;
         z->value = value;
         z->left = z->right = z->parent = NULL;
 
-        //if root is null make z as root
+        // if root is null set our new node as root
         if (root == NULL)
         {
             z->isRed = 0;
@@ -55,7 +51,7 @@ public:
             struct Node* y = NULL;
             struct Node* x = (root);
 
-            // Follow standard BST insert steps to first insert the node
+            // binary search tree insert to first insert the node
             while (x != NULL)
             {
                 y = x;
@@ -71,30 +67,34 @@ public:
                 y->left = z;
             z->isRed = 1;
 
-            // call insertFixUp to fix reb-black tree's property if it
-            // is voilated due to insertion.
+            // call fixInsert to fix RB tree property if it is voilated in newest insertion.
             fixInsert(z);
         }
+
+        // todo: return result
     };
-    Result searchKey(int key);
+    Result searchKey(int key) {
+        // todo
+    };
     void rotateLeft(Node* x)
     {
         if (!x || !x->right)
             return;
-        //y stored pointer of right child of x
+
+        // y stored pointer to right child of x
         struct Node* y = x->right;
 
-        //store y's left subtree's pointer as x's right child
+        // store y's left subtree's pointer as x's right child
         x->right = y->left;
 
-        //update parent pointer of x's right
+        // update parent pointer of x's right
         if (x->right != NULL)
             x->right->parent = x;
 
-        //update y's parent pointer
+        // update y's parent pointer
         y->parent = x->parent;
 
-        // if x's parent is null make y as root of tree
+        // if x's parent is null make y as root of the tree
         if (x->parent == NULL)
             root = y;
 
@@ -107,7 +107,7 @@ public:
         // make x as left child of y
         y->left = x;
 
-        //update parent pointer of x
+        // update parent pointer of x
         x->parent = y;
     };
     void rotateRight(Node* y) {
@@ -125,11 +125,11 @@ public:
         else y->parent->right = x;
         x->right = y;
         y->parent = x;
-
     };
     void fixInsert(Node* z) {
-        // iterate until z is not the root and z's parent color is red
-        while (z != root && z != (root)->left && z != (root)->right && z->parent->isRed == 1)
+        // iterate till z is not the root and z's parent color is red
+        // z->parent can be be dereferencing a null pointer according to my compiler but idk lol
+        while (z != root && z != root->left && z != root->right && z->parent->isRed == 1)
         {
             struct Node* y;
 
@@ -137,12 +137,13 @@ public:
             if (z->parent && z->parent->parent && z->parent == z->parent->parent->left)
                 y = z->parent->parent->right;
             else
-                y = z->parent->parent->left;
+                y = z->parent->parent->left; // MSCVC: Dereferencing NULL pointer 'z->parent'. See line 130 for an earlier location where this can occur
+
 
             // If uncle is RED, do following
-            // (i)  Change color of parent and uncle as BLACK
-            // (ii) Change color of grandparent as RED
-            // (iii) Move z to grandparent
+            // - Change color of parent and uncle as black
+            // - Change color of grandparent as red
+            // - Move z to grandparent
             if (!y)
                 z = z->parent->parent;
             else if (y->isRed == 1)
@@ -153,12 +154,12 @@ public:
                 z = z->parent->parent;
             }
 
-            // Uncle is BLACK, there are four cases (LL, LR, RL and RR)
+            // Uncle is black, there are four cases (LL, LR, RL and RR)
             else
             {
-                // Left-Left (LL) case, do following
-                // (i)  Swap color of parent and grandparent
-                // (ii) Right Rotate Grandparent
+                // LeftLeft (LL) case, do following
+                // - swap color of parent and grandparent
+                // - rotate to the right grandparent
                 if (z->parent == z->parent->parent->left &&
                     z == z->parent->left)
                 {
@@ -168,11 +169,11 @@ public:
                     rotateRight( z->parent->parent);
                 }
 
-                // Left-Right (LR) case, do following
-                // (i)  Swap color of current node  and grandparent
-                // (ii) Left Rotate Parent
-                // (iii) Right Rotate Grand Parent
-                if (z->parent && z->parent->parent && z->parent == z->parent->parent->left &&                    z == z->parent->right)
+                // LeftRight (LR) case, do following
+                // - swap color of current node and grandparent
+                // - left rotate parent
+                // - right rotate grand parent
+                if (z->parent && z->parent->parent && z->parent == z->parent->parent->left && z == z->parent->right)
                 {
                     char ch = z->isRed;
                     z->isRed = z->parent->parent->isRed;
@@ -181,9 +182,9 @@ public:
                     rotateRight(z->parent->parent);
                 }
 
-                // Right-Right (RR) case, do following
-                // (i)  Swap color of parent and grandparent
-                // (ii) Left Rotate Grandparent
+                // RightRight (RR) case, do following
+                // - swap color of parent and grandparent
+                // - left rotate grandparent
                 if (z->parent && z->parent->parent &&
                     z->parent == z->parent->parent->right &&
                     z == z->parent->right)
@@ -194,10 +195,10 @@ public:
                     rotateLeft( z->parent->parent);
                 }
 
-                // Right-Left (RL) case, do following
-                // (i)  Swap color of current node  and grandparent
-                // (ii) Right Rotate Parent
-                // (iii) Left Rotate Grand Parent
+                // RightLeft (RL) case, do following
+                // - swap color of current node  and grandparent
+                // - right Rotate Parent
+                // - left Rotate Grand Parent
                 if (z->parent && z->parent->parent && z->parent == z->parent->parent->right &&
                     z == z->parent->left)
                 {
@@ -209,7 +210,7 @@ public:
                 }
             }
         }
-        root->isRed = 0; //keep root always black
+        root->isRed = 0; // root is always black
 
     };
 };
