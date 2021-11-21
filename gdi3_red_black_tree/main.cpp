@@ -5,9 +5,10 @@
 #include "Tree.h"
 int main()
 {
-    RedBlackTree x = RedBlackTree(0, "ich bin root");
+    RedBlackTree x = RedBlackTree();
 
     std::string meme = "text";
+    x.insertKey(0, "ich bin root");
     x.insertKey(1, "bin rechts von root");
     x.insertKey(-1, "bin links von root");
 
