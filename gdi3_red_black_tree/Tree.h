@@ -23,7 +23,7 @@ typedef struct Result
     int index; // Index des gefundenen Elements 
     // = KEY?
     // WTF?
-    bool success = false;
+    bool success = false; // useless since we don't have any criteria for an unsuccessful Result
     int comparisons = 0;
 } Result;
 
@@ -31,6 +31,18 @@ class RedBlackTree
 {
 private:
     Node* root = nullptr;
+
+    Node* searchTreeHelper(Node* node, int key, Result* res) {
+        res->comparisons++;
+        if (node == NULL || key == node->key) {
+            return node;
+        }
+
+        if (key < node->key) {
+            return searchTreeHelper(node->left, key, res);
+        }
+        return searchTreeHelper(node->right, key, res);
+    }
 
 public:
     RedBlackTree() {
@@ -82,9 +94,16 @@ public:
         res.index = z->key;
         return res;
     };
+
     Result searchKey(int key) {
-        // todo
+        Result * res = new Result();
+        res->comparisons = 0;
+        res->index = searchTreeHelper(this->root, key, res)->key;
+        return *res; 
     };
+
+
+
     void rotateLeft(Node* x)
     {
         if (!x || !x->right)
