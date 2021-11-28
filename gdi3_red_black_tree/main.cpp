@@ -3,30 +3,10 @@
 
 #include <iostream>
 #include "Tree.h"
+
 int main()
 {
-    RedBlackTree x = RedBlackTree();
-
-    /*
-    std::string meme = "text";
-    Result res = x.insertKey(0, "ich bin root");
-    std::cout << res.index << std::endl;
-    Result res2 = x.insertKey(1, "bin rechts von root");
-    std::cout << res2.index << std::endl;
-    x.insertKey(-1, "bin links von root");
-    */
-    x.insertKey(13, "bin root");
-    x.insertKey(8, "bin links von root und rot");
-    x.insertKey(17, "bin rechts von root und rot");
-    x.insertKey(1, "bin links von 8 und schwarz");
-    x.insertKey(11, "bin rechts von 8 und schwarz");
-    x.insertKey(15, "bin links von 17 und schwarz");
-    x.insertKey(25, "bin rechts von 17 und schwarz");
-    x.insertKey(6, "bin rechts von 1 und bin rot");
-    x.insertKey(22, "bin links von 25 und rot");
-    x.insertKey(27, "bin rechts von 25 und rot");
-
-    Result res3 = x.searchKey(6);
+    RedBlackTree::test();
 
     std::cout << "Hello Worwldd!\n";
 }
