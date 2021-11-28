@@ -136,6 +136,56 @@ public:
     RedBlackTree() {
     };
 
+    static bool test() {
+        // create tree for testing
+        RedBlackTree x = RedBlackTree();
+
+        // 3
+        x.insertKey(26, "bin root");
+        x.insertKey(17, "bin links von root und rot");
+
+        // 2
+        x.insertKey(41, "bin rechts von root und schwarz");
+        x.insertKey(21, "bin rechts von 17 und schwarz");
+        x.insertKey(14, "bin links von 17 und schwarz");
+        x.insertKey(30, "bin links von 41 und rot");
+
+        // 1
+        x.insertKey(47, "bin rechts von 41 und rot");
+        x.insertKey(23, "bin rechts von 21 und schwarz");
+        x.insertKey(19, "bin links von 21 und schwarz");
+        x.insertKey(28, "bin links von 30 und schwarz");
+        x.insertKey(38, "bin rechts von 30 und schwarz");
+        x.insertKey(35, "bin links von 38 und rot");
+        x.insertKey(39, "bin rechts von 38 und rot");
+        x.insertKey(16, "bin rechts von 14 und schwarz");
+        x.insertKey(15, "bin links von 16 und rot");
+        x.insertKey(10, "bin links von 14 und rot");
+        x.insertKey(12, "bin rechts von 10 und schwarz");
+        x.insertKey(7, "bin links von 10 und schwarz");
+
+
+        // tests
+        // root node
+        assert(x.root->parent == nullptr);
+        assert(x.root->key == 26); 
+        assert(x.root->isRed == 0);
+
+        // 17
+        assert(x.root->left->key == 17); 
+        assert(x.root->left->isRed == 1);
+
+        // 41
+        assert(x.root->right->key == 41);
+        assert(x.root->right->isRed == 0);
+
+        // 14
+        assert(x.root->left->left->key == 14);
+
+
+        return true;
+    }
+
     Result insertKey(int key, std::string value) {
         Result res = Result();
         res.comparisons = 0;
