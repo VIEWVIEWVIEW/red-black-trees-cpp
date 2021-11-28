@@ -7,6 +7,7 @@
 #define REDBLACK_TREE_H
 
 #include <string>
+#include <cassert>
 typedef struct Node
 {
     int key;
@@ -21,8 +22,6 @@ typedef struct Result
 {
     Node* Node = nullptr;
     int index; // Index des gefundenen Elements 
-    // = KEY?
-    // WTF?
     bool success = false; // useless since we don't have any criteria for an unsuccessful Result
     int comparisons = 0;
 } Result;
@@ -44,7 +43,75 @@ private:
         return searchTreeHelper(node->right, key, res);
     }
 
+    void rotateLeft(Node* x)
+    {
+        if (!x || !x->right)
+            return;
+
+        // y stored pointer to right child of x
+        struct Node* y = x->right;
+
+        // store y's left subtree's pointer as x's right child
+        x->right = y->left;
+
+        // update parent pointer of x's right
+        if (x->right != nullptr)
+            x->right->parent = x;
+
+        // update y's parent pointer
+        y->parent = x->parent;
+
+        // if x's parent points to null => make y as root of the tree
+        if (x->parent == nullptr) {
+            root = y;
+        }
+        else if (x == x->parent->left) {
+            // replace x with y
+            x->parent->left = y;
+        }
+        else {
+            x->parent->right = y;
+        }
+        // set x as left child of y
+        y->left = x;
+
+        // update parent pointer of x
+        x->parent = y;
+    };
+
+    void rotateRight(Node* y) {
+        if (!y || !y->left)
+            return;
+
+        struct Node* x = y->left;
+        y->left = x->right;
+
+        if (x->right != nullptr)
+            x->right->parent = y;
+
+        x->parent = y->parent;
+
+        if (x->parent == nullptr) {
+            (root) = x;
+        }
+        else if (y == y->parent->left) {
+            y->parent->left = x;
+        }
+        else {
+            y->parent->right = x;
+        }
+
+        x->right = y;
+        y->parent = x;
+    };
+
+    /*
+        See Cormen et al "Introduction to Algorithms"
+        P. 318 for more information plus this typescript implementation
+        https://gist.github.com/hackwaly/7fdc89f1a0325a541f24#file-red_black_tree-ts-L122-L165
+    */
     void fixInsert(Node* z) {
+
         // iterate till z is not the root and z's parent color is red
         // z->parent can be be dereferencing a null pointer according to my compiler but idk lol
         while (z != root && z != root->left && z != root->right && z->parent->isRed == 1)
@@ -81,7 +148,7 @@ private:
                 if (z->parent == z->parent->parent->left &&
                     z == z->parent->left)
                 {
-                    char ch = z->parent->isRed;
+                    bool ch = z->parent->isRed;
                     z->parent->isRed = z->parent->parent->isRed;
                     z->parent->parent->isRed = ch;
                     rotateRight(z->parent->parent);
@@ -93,7 +160,7 @@ private:
                 // - right rotate grand parent
                 if (z->parent && z->parent->parent && z->parent == z->parent->parent->left && z == z->parent->right)
                 {
-                    char ch = z->isRed;
+                    bool ch = z->isRed;
                     z->isRed = z->parent->parent->isRed;
                     z->parent->parent->isRed = ch;
                     rotateLeft(z->parent);
@@ -107,7 +174,7 @@ private:
                     z->parent == z->parent->parent->right &&
                     z == z->parent->right)
                 {
-                    char ch = z->parent->isRed;
+                    bool ch = z->parent->isRed;
                     z->parent->isRed = z->parent->parent->isRed;
                     z->parent->parent->isRed = ch;
                     rotateLeft(z->parent->parent);
@@ -120,7 +187,7 @@ private:
                 if (z->parent && z->parent->parent && z->parent == z->parent->parent->right &&
                     z == z->parent->left)
                 {
-                    char ch = z->isRed;
+                    bool ch = z->isRed;
                     z->isRed = z->parent->parent->isRed;
                     z->parent->parent->isRed = ch;
                     rotateRight(z->parent);
@@ -193,21 +260,22 @@ public:
         Node* z = new Node();
         z->key = key;
         z->value = value;
-        z->left = z->right = z->parent = NULL;
+        z->isRed = 0;
+        z->left = z->right = z->parent = nullptr;
 
         // if root is null set our new node as root
-        if (root == NULL)
+        if (root == nullptr)
         {
             z->isRed = 0;
             root = z;
         }
         else
         {
-            struct Node* y = NULL;
-            struct Node* x = (root);
+            struct Node* y = nullptr;
+            struct Node* x = root;
 
             // binary search tree insert to first insert the node
-            while (x != NULL)
+            while (x != nullptr)
             {
                 y = x;
                 if (z->key < x->key)
@@ -219,8 +287,10 @@ public:
             z->parent = y;
             if (z->key > y->key)
                 y->right = z;
-            else
+            else if (z->key < y->key)
                 y->left = z;
+            else
+                y->right = z;
             z->isRed = 1;
             res.comparisons++;
 
@@ -243,56 +313,7 @@ public:
 
 
 
-    void rotateLeft(Node* x)
-    {
-        if (!x || !x->right)
-            return;
-
-        // y stored pointer to right child of x
-        struct Node* y = x->right;
-
-        // store y's left subtree's pointer as x's right child
-        x->right = y->left;
-
-        // update parent pointer of x's right
-        if (x->right != NULL)
-            x->right->parent = x;
-
-        // update y's parent pointer
-        y->parent = x->parent;
-
-        // if x's parent is null make y as root of the tree
-        if (x->parent == NULL)
-            root = y;
-
-        // store y at the place of x
-        else if (x == x->parent->left)
-            x->parent->left = y;
-        else
-            x->parent->right = y;
-
-        // make x as left child of y
-        y->left = x;
-
-        // update parent pointer of x
-        x->parent = y;
-    };
-    void rotateRight(Node* y) {
-        if (!y || !y->left)
-            return;
-        struct Node* x = y->left;
-        y->left = x->right;
-        if (x->right != NULL)
-            x->right->parent = y;
-        x->parent = y->parent;
-        if (x->parent == NULL)
-            (root) = x;
-        else if (y == y->parent->left)
-            y->parent->left = x;
-        else y->parent->right = x;
-        x->right = y;
-        y->parent = x;
-    };
+    
 
 };
 
