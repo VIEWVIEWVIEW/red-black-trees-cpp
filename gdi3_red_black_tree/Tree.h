@@ -43,7 +43,7 @@ private:
         return searchTreeHelper(node->right, key, res);
     }
 
-    void rotateLeft(Node* x)
+    void leftRotate(Node* x)
     {
         if (!x || !x->right)
             return;
@@ -163,7 +163,7 @@ private:
                     bool ch = z->isRed;
                     z->isRed = z->parent->parent->isRed;
                     z->parent->parent->isRed = ch;
-                    rotateLeft(z->parent);
+                    leftRotate(z->parent);
                     rotateRight(z->parent->parent);
                 }
 
@@ -177,7 +177,7 @@ private:
                     bool ch = z->parent->isRed;
                     z->parent->isRed = z->parent->parent->isRed;
                     z->parent->parent->isRed = ch;
-                    rotateLeft(z->parent->parent);
+                    leftRotate(z->parent->parent);
                 }
 
                 // RightLeft (RL) case, do following
@@ -191,7 +191,7 @@ private:
                     z->isRed = z->parent->parent->isRed;
                     z->parent->parent->isRed = ch;
                     rotateRight(z->parent);
-                    rotateLeft(z->parent->parent);
+                    leftRotate(z->parent->parent);
                 }
             }
         }
