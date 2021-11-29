@@ -168,9 +168,6 @@ public:
 	};
 
 	static bool test() {
-		// tests
-
-
 		// ---
 		// test rotations
 		RedBlackTree testLeftRotation = RedBlackTree();
@@ -242,13 +239,9 @@ public:
 		x.insertKey(11, "bin root");
 		x.insertKey(2, "bin links von root");
 		x.insertKey(14, "bin rechts von root");
-
 		x.insertKey(1, "bin links von 2");
 		x.insertKey(7, "bin rechts von 2");
-
-
 		x.insertKey(15, "bin rechts von 14");
-
 		x.insertKey(5, "bin links von 7");
 		x.insertKey(8, "bin rechts von 7");
 
@@ -258,9 +251,8 @@ public:
 	}
 
 private: bool validation(Node* x, int* leftCounter, int* rightCounter) {
-	// funny recursive function 
 	// 1
-	assert(x);	
+	assert(x->isRed == 0 || x->isRed == 1);	
 
 	// 2
 	assert(root);
