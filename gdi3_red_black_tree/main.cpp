@@ -7,8 +7,6 @@
 int main()
 {
     RedBlackTree::test();
-
-    std::cout << "Hello Worwldd!\n";
 }
 
 // Run program: Ctrl + F5 or Debug > Start Without Debugging menu
